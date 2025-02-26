@@ -2,9 +2,17 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+const axiosInstance = axios.create({
+  baseURL: BACKEND_URL,
+  withCredentials: true, 
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export const createUser = async (email: string, mobileNumber: string, password: string) => {
   try {
-    const response = await axios.post(`${BACKEND_URL}/user`, {
+    const response = await axiosInstance.post("/user", {
       email,
       mobileNumber,
       password,
@@ -16,12 +24,11 @@ export const createUser = async (email: string, mobileNumber: string, password: 
   }
 };
 
-
 export const updatePersonalInfo = async (email: string, title?: string, fullName?: string, dob?: string, currentAddress?: string, livedDuration?: string, aboutYou?: string ) => {
   try {
-
-    console.log(email,'email')
-    const response = await axios.patch(`${BACKEND_URL}/user/${email}`, {
+    console.log(email, "email");
+    
+    const response = await axiosInstance.patch(`/user/${email}`, {
       title,
       fullName,
       dob,
@@ -38,9 +45,9 @@ export const updatePersonalInfo = async (email: string, title?: string, fullName
 
 export const updateFinancialInfo = async (email: string, employmentStatus?: string, additionalSavings?: string ) => {
   try {
-    const response = await axios.patch(`${BACKEND_URL}/user/${email}`, {
+    const response = await axiosInstance.patch(`/user/${email}`, {
       employmentStatus, 
-      additionalSavings
+      additionalSavings,
     });
 
     return response;
@@ -49,9 +56,9 @@ export const updateFinancialInfo = async (email: string, employmentStatus?: stri
   }
 };
 
-export const getUser = async (email: string ) => {
+export const getUser = async (email: string) => {
   try {
-    const response = await axios.get(`${BACKEND_URL}/user/${email}`);
+    const response = await axiosInstance.get(`/user/${email}`);
 
     return response;
   } catch (error) {
